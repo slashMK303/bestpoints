@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Place = require('../models/place');
+const { geometry } = require('../utils/hereMaps');
 
 mongoose.connect('mongodb://127.0.0.1/bestpoints')
     .then((result) => {
@@ -154,15 +155,20 @@ async function seedPlaces() {
     ]
 
     try {
-        const newPlace = places.map(place => {
+        const newPlace = await Promise.all(places.map(async place => {
+            let geoData = await geometry(place.location)
+            if (!geoData) {
+                geoData = { type: 'Point', coordinates: [116.32883, -8.90952] }
+            }
             return {
                 ...place, author: '66b9d52f6edb5616f6f95c9e',
                 images: {
                     url: 'public\\images\\image-1723697803325-989822456.png',
                     filename: 'image-1723697803325-989822456.png'
-                }
+                },
+                geometry: geoData
             }
-        })
+        }))
 
         await Place.deleteMany({});
         await Place.insertMany(newPlace);
