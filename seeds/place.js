@@ -156,17 +156,17 @@ async function seedPlaces() {
 
     try {
         const newPlace = await Promise.all(places.map(async place => {
-            let geoData = await geometry(place.location)
+            let geoData = await geometry(place.location);
             if (!geoData) {
                 geoData = { type: 'Point', coordinates: [116.32883, -8.90952] }
             }
             return {
-                ...place, author: '66b9d52f6edb5616f6f95c9e',
+                ...place, author: '643d0c066dd99b1f6d6d6ad3',
                 images: {
                     url: 'public\\images\\image-1723697803325-989822456.png',
-                    filename: 'image-1723697803325-989822456.png'
+                    filename: 'image-1681876521153-260851838.jpg'
                 },
-                geometry: geoData
+                geometry: { ...geoData }
             }
         }))
 
